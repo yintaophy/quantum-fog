@@ -19,6 +19,7 @@ class BayesNode(DirectedNode):
     ----------
     __active_states : list[int]
         When all states are active, use range(self.size)
+    active_states : list[int]
     clique : Clique
         In a JoinTree, the family of any node belongs
         to exactly one clique, stored here. The family of a node
@@ -30,13 +31,6 @@ class BayesNode(DirectedNode):
         size of node
     state_names : list[str]
 
-    children : set[BaysNode]
-    neighbors : set[BayesNode]
-    parents : set[BayesNode]
-    id_num : int
-    topo_index : int
-    name : str
-    visited : bool
     """
 
     def __init__(self, id_num, name="blank", size=2):
@@ -75,7 +69,7 @@ class BayesNode(DirectedNode):
 
         """
         self.potential = pot
-        assert(pot.nd_sizes[-1] == self.size)
+        assert pot.nd_sizes[-1] == self.size
 
     def resize(self, size):
         """
@@ -117,7 +111,7 @@ class BayesNode(DirectedNode):
         None
 
         """
-        assert(0 <= position < self.size)
+        assert 0 <= position < self.size
         self.state_names[position] = name
 
     def pos_of_st_name(self, st_name):
@@ -201,8 +195,8 @@ class BayesNode(DirectedNode):
         None
 
         """
-        assert(max(states) < self.size and min(states) >= 0)
-        assert(len(states) >= 1)
+        assert max(states) < self.size and min(states) >= 0
+        assert len(states) >= 1
         self.__active_states = states
 
     active_states = property(get_active_states, set_active_states)

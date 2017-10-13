@@ -1,12 +1,10 @@
 # Most of the code in this file comes from PBNT by Elliot Cohen. See
 # separate file in this project with PBNT license.
 
-import heapq as he
 
-
-from nodes.Node import *
-from graphs.Clique import *
+from nodes.Clique import *
 from potentials.Potential import *
+import heapq as he
 
 
 class Sepset(Node):
@@ -27,11 +25,6 @@ class Sepset(Node):
     potential : Potential
     subnodes : set[Node]
 
-    id_nym : int
-    topo_index : int
-    name : str
-    neighbors : set[Node]
-    visited : bool
     """
 
     def __init__(self, id_num, clique_x, clique_y, subnodes):
@@ -51,8 +44,9 @@ class Sepset(Node):
         -------
 
         """
-        assert(len(subnodes) > 0)
-        Node.__init__(self, id_num)
+        assert len(subnodes) > 0
+        mashup = '_'.join(sorted([nd.name for nd in subnodes]))
+        Node.__init__(self, id_num, name=mashup)
         self.clique_x = clique_x
         self.clique_y = clique_y
         self.subnodes = subnodes
@@ -69,8 +63,7 @@ class Sepset(Node):
 
     def __lt__(self, other):
         """
-        Overrides <. Used by JoinTree to order sepsets
-        in a priority queue.
+        Overrides <. Used by JoinTree to order sepsets in a priority queue.
 
         Parameters
         ----------

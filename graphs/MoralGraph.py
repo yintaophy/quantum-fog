@@ -15,7 +15,6 @@ class MoralGraph(Graph):
 
     Attributes
     ----------
-    nodes : set[Node]
 
     """
 
@@ -45,13 +44,10 @@ class MoralGraph(Graph):
                     if not pa1.has_neighbor(pa2):
                         pa1.add_neighbor(pa2)
 
-from examples_cbnets.HuaDar import *
 if __name__ == "__main__":
+    from examples_cbnets.HuaDar import *
     bnet = HuaDar.build_bnet()
     mo = MoralGraph(bnet)
-    for node in mo.nodes:
-        print("name: ", node.name)
-        print("neighbors: ", [x.name for x in node.neighbors])
-        print("\n")
+    mo.print_neighbors()
 
 

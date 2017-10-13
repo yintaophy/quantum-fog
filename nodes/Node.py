@@ -12,13 +12,13 @@ class Node:
     ----------
     id_num : int
         Should be an int that is immutable and different for each node.
+    name : str
+        Optional, preferably different for each node.
+    neighbors : set[Nodes]
     topo_index : int
         Initially defined to be equal to id_num. After a topological sort,
         indices are permuted amongst the nodes so as to be in topological
         order, root nodes having lowest topo_index.
-    name : str
-        Optional, preferably different for each node.
-    neighbors : set[Nodes]
     visited : bool
 
     """
@@ -134,9 +134,9 @@ if __name__ == "__main__":
     a.add_neighbor(b)
     a.add_neighbor(c)
     aa = a
-    assert(aa == a)
-    assert(a != b)
-    assert(a.has_neighbor(b))
+    assert aa == a
+    assert a != b
+    assert a.has_neighbor(b)
     a.remove_neighbor(b)
-    assert(not a.has_neighbor(b))
+    assert not a.has_neighbor(b)
 
