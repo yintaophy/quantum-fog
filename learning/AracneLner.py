@@ -36,18 +36,6 @@ class AracneLner(ChowLiuTreeLner):
 
     Attributes
     ----------
-    is_quantum : bool
-        True for quantum bnets amd False for classical bnets
-    bnet : BayesNet
-        a BayesNet in which we store what is learned
-    states_df : pandas.DataFrame
-        a Pandas DataFrame with training data. column = node and row =
-        sample. Each row/sample gives the state of the col/node.
-
-
-    ord_nodes : list[DirectedNode]
-        a list of DirectedNode's named and in the same order as the column
-        labels of self.states_df.
 
     """
 
@@ -146,7 +134,7 @@ class AracneLner(ChowLiuTreeLner):
 
 if __name__ == "__main__":
 
-    csv_path = 'training_data_c/simple_tree_7nd.csv'
+    csv_path = 'training_data_c/SimpleTree7nd.csv'
     states_df = pd.read_csv(csv_path)
     lnr = AracneLner(states_df)
     lnr.bnet.draw(algo_num=1)

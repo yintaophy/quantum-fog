@@ -1,0 +1,18 @@
+strict digraph "" {
+"Visited_Asian_TB_HRA";
+Smoke;
+Dyspnea;
+Bronchitis;
+"Lung_Cancer";
+Tuberculosis;
+Either;
+"X_Ray";
+"Visited_Asian_TB_HRA" -> Tuberculosis;
+Smoke -> "Lung_Cancer";
+Smoke -> Bronchitis;
+Bronchitis -> Dyspnea;
+"Lung_Cancer" -> Either;
+Tuberculosis -> Either;
+Either -> Dyspnea;
+Either -> "X_Ray";
+}

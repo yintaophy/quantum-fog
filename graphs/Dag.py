@@ -18,9 +18,6 @@ class Dag(Graph):
     Attributes
     ----------
     nodes : set[DirectedNode]
-    num_nodes : int
-        number of nodes.
-
 
     """
 
@@ -37,7 +34,6 @@ class Dag(Graph):
 
         """
         Graph.__init__(self, nodes)
-        self.num_nodes = len(self.nodes)
         self.topological_sort()
 
     def detect_two_node_cycle(self):
@@ -53,16 +49,15 @@ class Dag(Graph):
         for node in self.nodes:
             overlap = node.parents & node.children
             if overlap:
-                raise BadGraphStructure(
-                    "two node cycle detected")
+                raise BadGraphStructure("two node cycle detected")
 
     def topological_sort(self):
         """
-        Orders nodes (permutes their topo_index's) such that no node is before
-        any of its parents. Node with lowest topo_index number is a root
-        node. So this could also be called a chronological sort, youngest
-        nodes first. Exception is raised if graph has cycles and cannot be
-        ordered topologically.
+        Orders nodes (permutes their topo_index's) such that no node is
+        before any of its parents. Node with lowest topo_index number is a
+        root node. So this could also be called a chronological or birthday
+        sort, youngest nodes first. Exception is raised if graph has cycles
+        and cannot be ordered topologically.
 
         Returns
         -------
@@ -73,12 +68,11 @@ class Dag(Graph):
         self.detect_two_node_cycle()
         sorted_set = set()
         i = 0
-        tot_iter = len(self.nodes)
+        num_unsorted_nds = len(self.nodes)
         while len(self.nodes) > 0:
-            if tot_iter <= 0:
-                raise BadGraphStructure(
-                    "Graph must be acyclic")
-            tot_iter -= 1
+            if num_unsorted_nds <= 0:
+                raise BadGraphStructure("Graph must be acyclic")
+            num_unsorted_nds -= 1
             for node in self.nodes:
                 if sorted_set >= node.parents:
                     sorted_set.add(node)
@@ -114,6 +108,7 @@ class Dag(Graph):
         None
 
         """
+        assert all([isinstance(nd, DirectedNode) for nd in nodes])
         Graph.add_nodes(self, nodes)
         self.topological_sort()
 
@@ -132,9 +127,7 @@ class Dag(Graph):
 
         """
         new_g = Dag(set())
-        k = -1
-        for name in nx_graph.nodes():
-            k += 1
+        for k, name in enumerate(nx_graph.nodes()):
             new_g.add_nodes({DirectedNode(k, name=name)})
 
         node_list = list(new_g.nodes)
@@ -180,15 +173,14 @@ if __name__ == "__main__":
 
     g.draw(algo_num=1)
 
-    # double dot to get parent directory
-    path1 = '../examples_cbnets/dot_test1.dot'
-    path2 = '../examples_cbnets/dot_test2.dot'
+    path1 = '../examples_cbnets/dag1.dot'
+    path2 = '../examples_cbnets/dag2.dot'
     g.write_dot(path1)
     new_g = Dag.read_dot(path1)
     new_g.write_dot(path2)
 
     try:
-        test = 1
+        test = 2
         if test == 1:
             print("introduce 2 node cycle")
             c2.add_child(p2)

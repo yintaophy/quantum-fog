@@ -1,9 +1,7 @@
-import pandas as pd
-import numpy as np
-import copy as cp
 import scipy.special as sp
-from learning.DataEntropy import *
+
 from learning.NetParamsLner import *
+from shannon_info_theory.DataEntropy import *
 
 
 class NetStrucScorer:
@@ -60,16 +58,16 @@ class NetStrucScorer:
         score for it.
     vtx_to_parents : dict[str, list[str]]
         a dictionary that maps each vertex to a list of its parents.
-    vtx_to_states : dict[str, list[str]]
-        A dictionary mapping each node name to a list of its state names.
-        This information will be stored in self.bnet. If
-        vtx_to_states=None, constructor will learn vtx_to_states
-        from states_df
     vtx_to_score : dict[str, float]
         a dictionary that maps each vertex to its score
     vtx_to_size : dict[str, int]
         a dictionary that maps each vertex to its number of states (aka its
         size)
+    vtx_to_states : dict[str, list[str]]
+        A dictionary mapping each node name to a list of its state names.
+        This information will be stored in self.bnet. If
+        vtx_to_states=None, constructor will learn vtx_to_states
+        from states_df
 
     """
 

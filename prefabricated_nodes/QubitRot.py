@@ -1,7 +1,6 @@
 from potentials.DiscreteCondPot import *
 from nodes.BayesNode import *
 import math
-from MyConstants import *
 
 
 class QubitRot(BayesNode):
@@ -31,21 +30,9 @@ class QubitRot(BayesNode):
 
     Attributes
     ----------
-    thetas_degs : list[float]
-
     potential : Potential
-    active_states : list[int]
-    clique : Clique
-    size : int
     state_names : list[str]
-    children : set[BayesNode]
-    neighbors : set[BayesNode]
-    parents : set[BayesNode]
-    id_num : int
-    topo_index : int
-    name : str
-    visited : bool
-
+    thetas_degs : list[float]
 
     """
 
@@ -109,7 +96,7 @@ class QubitRot(BayesNode):
         theta_mag = math.sqrt(theta_mag)
 
         theta_hat = [0]*4
-        if theta_mag > TOL:
+        if theta_mag > 1e-6:
             theta_hat = [rads[k]/theta_mag for k in range(4)]
         # theta_hat[0] = 0  will never be used
 

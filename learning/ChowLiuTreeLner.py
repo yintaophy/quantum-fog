@@ -1,6 +1,7 @@
-from learning.NetStrucLner import *
-from learning.DataEntropy import *
 import operator
+
+from learning.NetStrucLner import *
+from shannon_info_theory.DataEntropy import *
 
 
 class ChowLiuTreeLner(NetStrucLner):
@@ -30,16 +31,6 @@ class ChowLiuTreeLner(NetStrucLner):
 
     Attributes
     ----------
-    is_quantum : bool
-        True for quantum bnets amd False for classical bnets
-    bnet : BayesNet
-        a BayesNet in which we store what is learned
-    states_df : pandas.DataFrame
-        a Pandas DataFrame with training data. column = node and row =
-        sample. Each row/sample gives the state of the col/node.
-    ord_nodes : list[DirectedNode]
-        a list of DirectedNode's named and in the same order as the column
-        labels of self.states_df.
 
     """
 
@@ -171,7 +162,7 @@ if __name__ == "__main__":
     from examples_cbnets.SimpleTree7nd import *
 
     is_quantum = False
-    csv_path = 'training_data_c/simple_tree_7nd.csv'
+    csv_path = 'training_data_c/SimpleTree7nd.csv'
     num_samples = 500
     bnet = SimpleTree7nd.build_bnet()
     gen = RandGen_NetParams(is_quantum, bnet, num_samples)

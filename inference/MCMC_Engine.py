@@ -22,17 +22,15 @@ class MCMC_Engine(InferenceEngine):
 
     Attributes
     ----------
-    bnet_ord_nodes : list[BayesNode]
-
-    bnet : BayesNet
-    verbose : bool
-    is_quantum : bool
 
     """
 
     def __init__(self, bnet, verbose=False, is_quantum=False):
         """
-        Constructor
+        Constructor. Note that the constructor of every inference engine is
+        designed so that one of its objects can be created just once at the
+        beginning and then reused to calculate probabilities under several
+        evidence assumptions.
 
         Parameters
         ----------
@@ -45,7 +43,6 @@ class MCMC_Engine(InferenceEngine):
 
         """
         InferenceEngine.__init__(self, bnet, verbose, is_quantum)
-        self.bnet_ord_nodes = list(self.bnet.nodes)
 
     def get_unipot_list(self, node_list, num_cycles, warmup):
         """
@@ -67,7 +64,7 @@ class MCMC_Engine(InferenceEngine):
         list[DiscreteUniPot]
 
         """
-        assert(set(node_list) <= self.bnet.nodes)
+        assert set(node_list) <= self.bnet.nodes
         nd_to_pot = {node: DiscreteUniPot(self.is_quantum, node, bias=0)
                     for node in node_list}
         # initialize current story to a random one
@@ -82,7 +79,7 @@ class MCMC_Engine(InferenceEngine):
                 prev_state = annotated_story[node]
                 (sam_state, sam_pot) = \
                     self.sample_node_given_markov_blanket(
-                    node, annotated_story)
+                        node, annotated_story)
 
                 if node in nd_to_pot:
                     if cy > warmup:
@@ -105,7 +102,7 @@ class MCMC_Engine(InferenceEngine):
         pot_list = []
         for node in node_list:
             pot = nd_to_pot[node]
-            pot.normalize_self()
+            pot.tr_normalize_self()
             if self.is_quantum:
                 pot = pot.get_probs_from_amps()
             pot_list.append(pot)
@@ -145,32 +142,25 @@ class MCMC_Engine(InferenceEngine):
                 states = [
                     annotated_story[node]
                     for node in n_node.potential.ord_nodes]
-                slicex = n_node.potential.get_slicex_nd(
+                slicex = n_node.potential.slicex_from_nds(
                         states, n_node.potential.ord_nodes)
-                sam_pot[state] *= n_node.potential[slicex]
+                sam_pot[(state, )] *= n_node.potential[slicex]
         sam_state = sam_pot.sample()
         annotated_story[focus_node] = sam_state
         return (sam_state, sam_pot)
 
-from examples_cbnets.HuaDar import *
 if __name__ == "__main__":
-
+    from examples_cbnets.HuaDar import *
     bnet = HuaDar.build_bnet()
+    inf_eng = MCMC_Engine(bnet, verbose=True)
 
-    # introduce some evidence
+    # introduce some evidence after creating engine
     bnet.get_node_named("D").active_states = [0]
     bnet.get_node_named("G").active_states = [1]
-
-    inf_eng = MCMC_Engine(bnet, verbose=True)
-    id_nums = sorted([node.id_num for node in bnet.nodes])
-    node_list = [bnet.get_node_with_id_num(k) for k in id_nums]
-
-    # this is simpler but erratic
-    # node_list = list(bnet.nodes)
 
     num_cycles = 4000
     warmup = 200
     pot_list = inf_eng.get_unipot_list(
-            node_list, num_cycles, warmup)
+            inf_eng.bnet_ord_nodes, num_cycles, warmup)
     for pot in pot_list:
         print(pot, "\n")

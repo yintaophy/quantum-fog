@@ -16,14 +16,6 @@ class DiscreteUniPot(DiscreteCondPot):
 
     Attributes
     ----------
-    focus_node : BayesNode
-
-    is_quantum : bool
-    nd_sizes : list[int]
-    nodes ; set[Node]
-    num_nodes : int
-    ord_nodes : list[Node]
-    por_arr : numpy.ndarray
 
     """
 
@@ -58,10 +50,14 @@ class DiscreteUniPot(DiscreteCondPot):
     def sample(self):
         """
         This samples a state of the focus node using pot_arr as a
-        distribution. It first normalizes pot_arr (1-norm for classical and
-        2-norm for quantum). For the quantum case, it actually samples from
-        the classical PD obtained by taking the absolute value squared of
-        pot_arr.
+        distribution. It first normalizes pot_arr ( 1-norm for classical and
+        2-norm for quantum) because it's easier to sample a normalized pot
+        and normalization of a one-dim distribution is not very expensive.
+
+        For the quantum case, this function samples from the classical PD
+        obtained by taking the absolute value squared of pot_arr. Then the
+        complex amplitude of the sampled state is used as the sampled
+        amplitude.
 
         Returns
         -------
@@ -109,8 +105,7 @@ class DiscreteUniPot(DiscreteCondPot):
         assert self.is_quantum
         arr = self.pot_arr
         arr2 = (arr*np.conjugate(arr)).real
-        return DiscreteUniPot(
-            False, self.focus_node, pot_arr=arr2)
+        return DiscreteUniPot(False, self.focus_node, pot_arr=arr2)
 
     def __deepcopy__(self, memo):
         """

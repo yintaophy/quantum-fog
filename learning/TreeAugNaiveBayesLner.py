@@ -1,7 +1,4 @@
-from learning.NetStrucLner import *
-from learning.DataEntropy import *
 from learning.ChowLiuTreeLner import *
-import operator
 
 
 class TreeAugNaiveBayesLner(NetStrucLner):
@@ -20,18 +17,11 @@ class TreeAugNaiveBayesLner(NetStrucLner):
 
     Attributes
     ----------
-    is_quantum : bool
-        True for quantum bnets amd False for classical bnets
     bnet : BayesNet
         a BayesNet in which we store what is learned
-    states_df : pandas.DataFrame
-        a Pandas DataFrame with training data. column = node and row =
-        sample. Each row/sample gives the state of the col/node.
     ord_nodes : list[DirectedNode]
         a list of DirectedNode's named and in the same order as the column
         labels of self.states_df.
-
-
     tar_vtx : str
         target vertex. This node has arrows pointing to all other nodes.
 
@@ -87,7 +77,7 @@ class TreeAugNaiveBayesLner(NetStrucLner):
 
 if __name__ == "__main__":
 
-    csv_path = 'training_data_c/simple_tree_7nd.csv'
+    csv_path = 'training_data_c/SimpleTree7nd.csv'
     states_df = pd.read_csv(csv_path)
     tar_vtx = 'b0'
     lnr = TreeAugNaiveBayesLner(states_df, tar_vtx)

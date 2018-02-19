@@ -21,6 +21,8 @@ class Graph:
     Attributes
     ----------
     nodes : set[Node]
+    num_nodes : int
+        number of nodes.
 
     """
 
@@ -37,6 +39,7 @@ class Graph:
 
         """
         self.nodes = nodes
+        self.num_nodes = len(self.nodes)
 
     def add_nodes(self, nodes):
         """
@@ -52,6 +55,7 @@ class Graph:
 
         """
         self.nodes |= nodes
+        self.num_nodes = len(self.nodes)
 
     def has_node(self, node):
         """
@@ -70,8 +74,7 @@ class Graph:
 
     def contains(self, nodes):
         """
-        Answer the question of whether set 'nodes' is a subset of
-        'self.nodes'.
+        Returns True iff set 'nodes' is a subset of 'self.nodes'.
 
         Parameters
         ----------
@@ -86,7 +89,8 @@ class Graph:
 
     def unmark_all_nodes(self):
         """
-        Set the 'visited' flag of all nodes to False.
+        Set the 'visited' flag of all nodes to False. 'visited' is an
+        attribute of class Node.
 
         Returns
         -------
@@ -165,15 +169,12 @@ class Graph:
 
         """
         new_g = Graph(set())
-        k = -1
-        for name in nx_graph.nodes():
-            k += 1
+        for k, name in enumerate(nx_graph.nodes()):
             new_g.add_nodes({Node(k, name=name)})
 
         node_list = list(new_g.nodes)
-        k = -1
-        for nd1 in node_list:
-            k += 1
+
+        for k, nd1 in enumerate(node_list):
             for nd2 in node_list[k+1:]:
                 if nd1.name in nx_graph.neighbors(nd2.name):
                     nd1.add_neighbor(nd2)
@@ -191,9 +192,7 @@ class Graph:
 
         node_list = list(self.nodes)
         nx_graph = nx.Graph()
-        k = -1
-        for nd1 in node_list:
-            k += 1
+        for k, nd1 in enumerate(node_list):
             for nd2 in node_list[k+1:]:
                 if nd2.has_neighbor(nd1):
                     nx_graph.add_edge(nd1.name, nd2.name)
@@ -272,12 +271,26 @@ class Graph:
 
         Returns
         -------
-        Graph
+        cls
 
         """
         nx_graph = nx.nx_pydot.read_dot(path)
         return cls.new_from_nx_graph(nx_graph)
 
+    def print_neighbors(self):
+        """
+        Print neighbors of each node
+
+        Returns
+        -------
+        None
+
+        """
+        for node in self.nodes:
+            print("name: ", node.name)
+            print("neighbors: ",
+                  sorted([x.name for x in node.neighbors]))
+            print("\n")
 
 from nodes.Node import *
 if __name__ == "__main__":
@@ -289,8 +302,8 @@ if __name__ == "__main__":
 
     g = Graph({p1})
     g.add_nodes({p2, center, c1, c2})
-    assert(g.has_node(p1))
-    assert(g.contains({p1, center, c2}))
+    assert g.has_node(p1)
+    assert g.contains({p1, center, c2})
 
     center.add_neighbor(p1)
     center.add_neighbor(p2)
@@ -299,9 +312,8 @@ if __name__ == "__main__":
 
     g.draw(algo_num=1)
 
-    # double dot to get parent directory
-    path1 = '../examples_cbnets/dot_test1.dot'
-    path2 = '../examples_cbnets/dot_test2.dot'
+    path1 = '../examples_cbnets/graph1.dot'
+    path2 = '../examples_cbnets/graph2.dot'
     g.write_dot(path1)
     new_g = Graph.read_dot(path1)
     new_g.write_dot(path2)

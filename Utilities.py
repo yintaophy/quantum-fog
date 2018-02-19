@@ -2,9 +2,9 @@
 # separate file in this project with PBNT license.
 
 import numpy as np
-from MyConstants import *
 import itertools as it
 import cmath
+from fractions import Fraction
 
 
 def cartesian_product(shape_list):
@@ -44,6 +44,7 @@ def fix(in_str, bad_chs, sub):
         in_str = in_str.replace(c, sub)
     return in_str
 
+
 def log_print(x):
     """
     Prints file name of log_print() call, then file line of log_print()
@@ -61,6 +62,63 @@ def log_print(x):
     from inspect import getframeinfo, stack
     caller = getframeinfo(stack()[1][0])
     print(caller.filename, "line=", caller.lineno, ":\n", x)
+
+
+def formatted_number_str(num, num_format):
+    """
+    Returns formatted string for num
+
+    Parameters
+    ----------
+    num : float|complex
+    num_format : str
+
+    Returns
+    -------
+    str
+
+    """
+    if num_format == 'Fraction':
+        return str(Fraction.from_float(num).limit_denominator(100))
+    elif num_format == 'Percentage':
+        return "{:.2%}".format(num)
+    elif num_format == 'Float':
+        return str(num)
+    else:
+        return num_format.format(num)
+
+def is_sq_arr(arr):
+    """
+    Returns True iff arr is a square array.
+
+    Parameters
+    ----------
+    arr : numpy.ndarray
+
+    Returns
+    -------
+    bool
+
+    """
+    shp = arr.shape
+    return shp == (shp[0], shp[0])
+
+def is_herm(arr):
+    """
+    Returns True iff arr is a Hermitian matrix.
+
+    Parameters
+    ----------
+    arr : numpy.ndarray
+
+    Returns
+    -------
+    bool
+
+    """
+    assert is_sq_arr(arr)
+    return np.linalg.norm(arr - arr.T.conj()) < 1e-6
+
 
 if __name__ == "__main__":
     # both work

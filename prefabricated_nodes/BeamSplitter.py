@@ -72,27 +72,14 @@ class BeamSplitter(BayesNode):
 
     Attributes
     ----------
+    max_n_sum : int
     num_of_comps : int
         number of components, equals 1 for scalar case and 2 for vector case.
-    tau_mag : float
-    tau_degs : float
-    rho_degs : float
-    max_n_sum : int
-    true_max_n_sum : int
-
     potential : Potential
-    active_states : list[int]
-    clique : Clique
-    size : int
-    state_names : list[str]
-    children : set[BayesNode]
-    neighbors : set[BayesNode]
-    parents : set[BayesNode]
-    id_num : int
-    topo_index : int
-    name : str
-    visited : bool
-
+    rho_degs : float
+    tau_degs : float
+    tau_mag : float
+    true_max_n_sum : int
 
     """
 
@@ -219,14 +206,14 @@ class BeamSplitter(BayesNode):
 
         # tau_mag=1 case
         n_dif = n1 - n2
-        if abs(tau_mag-1) < TOL:
+        if abs(tau_mag-1) < 1e-6:
             if n1 == m1 and n2 == m2:
                 return cmath.exp(1j*tau_rads*n_dif)
             else:
                 return 0+0j
 
         # tau_mag=0 case
-        if tau_mag < TOL:
+        if tau_mag < 1e-6:
             if n1 == m2 and n2 == m1:
                 return cmath.exp(1j*(rho_degs/180*n_dif + n2)*math.pi)
             else:
@@ -309,7 +296,7 @@ class BeamSplitter(BayesNode):
                     for in_st1, in_st2 in ut.cartesian_product(in_shape):
                         zx = self.get_bs_amp_self(
                             n1x, n2x, m1x[in_st1], m2x[in_st2])
-                        if abs(zx) >= TOL:
+                        if abs(zx) >= 1e-6:
                             if dry_run:
                                 degen += 1
                                 break  # goto next_n1_n2_pair
@@ -331,10 +318,10 @@ class BeamSplitter(BayesNode):
                                     ut.cartesian_product(in_shape):
                                 zx = self.get_bs_amp_self(
                                     n1x, n2x, m1x[in_st1], m2x[in_st2])
-                                if abs(zx) >= TOL:
+                                if abs(zx) >= 1e-6:
                                     zy = self.get_bs_amp_self(
                                         n1y, n2y, m1y[in_st1], m2y[in_st2])
-                                    if abs(zy) >= TOL:
+                                    if abs(zy) >= 1e-6:
                                         if dry_run:
                                             degen += 1
                                             break  # goto next_n_set

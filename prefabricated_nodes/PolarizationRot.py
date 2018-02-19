@@ -30,23 +30,10 @@ class PolarizationRot(BayesNode):
 
     Attributes
     ----------
-    theta_degs : float
     max_n_sum : int
-    true_max_n_sum : int
-
     potential : Potential
-    active_states : list[int]
-    clique : Clique
-    size : int
-    state_names : list[str]
-    children : set[BayesNode]
-    neighbors : set[BayesNode]
-    parents : set[BayesNode]
-    id_num : int
-    topo_index : int
-    name : str
-    visited : bool
-
+    theta_degs : float
+    true_max_n_sum : int
 
     """
 
@@ -136,7 +123,7 @@ class PolarizationRot(BayesNode):
                     z = BeamSplitter.get_bs_amp(
                             nx, ny, mx[in_st], my[in_st],
                             tau_mag, tau_degs, rho_degs)
-                    if abs(z) >= TOL:
+                    if abs(z) >= 1e-6:
                         if dry_run:
                             degen += 1
                             break  # goto next nx,ny pair
